@@ -1,5 +1,7 @@
 "use client"
 
+import type React from "react"
+
 import { useMemo, useState } from "react"
 import { useFavorites } from "@/lib/stores/favorites-store"
 import { Button } from "@/components/ui/button"
@@ -16,12 +18,27 @@ export default function FavoritesPage() {
   const { favorites, remove, setCategory } = useFavorites()
   const [newFolder, setNewFolder] = useState("")
   const [folders, setFolders] = useState<string[]>(["All", "Funny", "Motivation"])
+  const [selectedCategory, setSelectedCategory] = useState<string>("All")
 
   const categories = useMemo(() => {
     const set = new Set<string>(folders)
     favorites.forEach((f) => f.category && set.add(f.category))
     return Array.from(set)
   }, [favorites, folders])
+
+  const filteredFavorites = useMemo(() => {
+    if (selectedCategory === "All") return favorites
+    const sel = selectedCategory.toLowerCase()
+    return favorites.filter((f) => (f.category?.toLowerCase() ?? "") === sel)
+  }, [favorites, selectedCategory])
+
+  const onCategoryActivate = (c: string) => setSelectedCategory(c)
+  const onBadgeKeyDown = (e: React.KeyboardEvent, c: string) => {
+    if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault()
+      setSelectedCategory(c)
+    }
+  }
 
   const addFolder = () => {
     if (!newFolder.trim()) return
@@ -66,7 +83,17 @@ export default function FavoritesPage() {
 
           <div className="flex flex-wrap items-center gap-2">
             {categories.map((c) => (
-              <Badge key={c} variant={c === "All" ? "default" : "secondary"} className="cursor-default">
+              <Badge
+                key={c}
+                role="button"
+                tabIndex={0}
+                aria-pressed={selectedCategory === c}
+                onClick={() => onCategoryActivate(c)}
+                onKeyDown={(e) => onBadgeKeyDown(e, c)}
+                variant={selectedCategory === c ? "default" : "secondary"}
+                className="cursor-pointer"
+                title={selectedCategory === c ? `Selected: ${c}` : `Filter by ${c}`}
+              >
                 {c}
               </Badge>
             ))}
@@ -75,7 +102,7 @@ export default function FavoritesPage() {
 
         <TabsContent value="grid">
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {favorites.map((f) => (
+            {filteredFavorites.map((f) => (
               <Card key={f.id} className="flex flex-col">
                 <CardHeader>
                   <CardTitle className="text-pretty text-base">{f.title}</CardTitle>
@@ -112,9 +139,11 @@ export default function FavoritesPage() {
                 </CardFooter>
               </Card>
             ))}
-            {favorites.length === 0 && (
+            {filteredFavorites.length === 0 && (
               <p className="col-span-full text-sm text-muted-foreground">
-                No saved scripts yet. Go to Discover and save one.
+                {selectedCategory === "All"
+                  ? "No saved scripts yet. Go to Discover and save one."
+                  : "No scripts in this folder yet."}
               </p>
             )}
           </div>
@@ -122,7 +151,7 @@ export default function FavoritesPage() {
 
         <TabsContent value="list">
           <div className="grid gap-2">
-            {favorites.map((f) => (
+            {filteredFavorites.map((f) => (
               <div
                 key={f.id}
                 className="grid grid-cols-[80px_1fr_auto] items-center gap-3 rounded-md border border-slate-200 bg-background p-2 dark:border-slate-800"
@@ -146,8 +175,10 @@ export default function FavoritesPage() {
                 </Button>
               </div>
             ))}
-            {favorites.length === 0 && (
-              <p className="text-sm text-muted-foreground">Empty. Save scripts from Discover.</p>
+            {filteredFavorites.length === 0 && (
+              <p className="text-sm text-muted-foreground">
+                {selectedCategory === "All" ? "Empty. Save scripts from Discover." : "No scripts in this folder yet."}
+              </p>
             )}
           </div>
         </TabsContent>
