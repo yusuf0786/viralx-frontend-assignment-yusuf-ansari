@@ -1,36 +1,68 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# VIRALX – UI Prototype
 
-## Getting Started
+Modern, responsive Next.js UI for an Instagram creator tool featuring swipe discovery, script editing, favorites vault, and a competitor dashboard.
 
-First, run the development server:
+Tech stack
+- Next.js App Router
+- Tailwind CSS (shadcn/ui)
+- Framer Motion (animations)
+- Recharts (mini chart)
+- SWR + localStorage (state persistence)
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+Features implemented
+- Home / Discover
+  - Tinder-style swipe deck (drag right = Like, left = Skip)
+  - Cards with Thumbnail, Title, Niche Tag
+  - Buttons: Like, Save (opens editor), Skip
+- Script Viewer (Descript + Rescript)
+  - Modal with transcript editor
+  - Tone and Language dropdowns
+  - Optional Category input
+  - Save to Favorites (Script Vault)
+- Favorites (Script Vault)
+  - Grid and List views
+  - Create folders/categories and assign per script
+  - Remove saved scripts
+- Competitor Dashboard (Bonus)
+  - Totals (likes, views, shares) and small bar chart
+  - Card list of competitor reels with metrics
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Design system
+- Colors (max 5 total): Primary sky-600, neutrals white / slate-900 / slate-200, accent emerald-500
+- Typography: Geist Sans (headings/body)
+- Responsive: Desktop, tablet, mobile with comfortable spacing and targets
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Local development
+- Open the preview in v0 (no extra setup required).
+- Publish to Vercel using the Publish button in the top-right of the v0 UI.
+- To install locally, download ZIP from v0 and use the shadcn CLI or GitHub integration from the v0 UI.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Setup
 
-## Learn More
+You can use VIRALX directly in v0 or deploy it to Vercel. For local development, you can also download the project.
 
-To learn more about Next.js, take a look at the following resources:
+- In v0 (recommended)
+  - Open the Preview to run the app instantly.
+  - Click Publish (top-right) to deploy to Vercel.
+  - Use the GitHub button (top-right) to push the code to your repo.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- Install locally
+  - From the Version Box menu in v0, click Download ZIP.
+  - Unzip and open the project in your editor.
+  - Optionally initialize a Next.js project and copy files, or use the GitHub button in v0 to create a repo you can clone locally.
+  - The project is built with the v0 Next.js runtime; when turning it into a standalone Next.js project, ensure Tailwind and shadcn/ui are set up. The v0 UI provides the shadcn CLI to help.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Screenshots
 
-## Deploy on Vercel
+### Discover Page
+![Discover Page](public/images/viralx-discover.jpg)
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### Script Viewer
+![Script Viewer](public/images/viralx-script-viewer.jpg)
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### Competitor Dashboard
+![Competitor Dashboard](public/images/viralx-competitors.jpg)
+
+Notes
+- Data is mock JSON; no backend needed.
+- State is persisted in localStorage and shared via SWR.
